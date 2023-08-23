@@ -1,0 +1,9 @@
+{
+    "idf.adapterTargetName": "esp32s3",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-bridge.cfg"
+    ],
+    "idf.flashType": "UART",
+    "cmake.sourceDirectory": "/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send",
+    "idf.port": "/dev/cu.usbmodem141401"
+}

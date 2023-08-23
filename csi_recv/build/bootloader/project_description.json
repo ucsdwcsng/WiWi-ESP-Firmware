@@ -1,0 +1,21 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/Users/sureel/esp/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_recv/build/bootloader",
+    "config_file":        "/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_recv/sdkconfig",
+    "config_defaults":    "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "git_revision":       "v4.4.4-dirty",
+    "target":             "esp32s3",
+    "rev":                "",
+    "phy_data_partition": "",
+    "monitor_baud" :      "921600",
+    "monitor_toolprefix": "xtensa-esp32s3-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/Users/sureel/esp/esp-idf/components/efuse/Kconfig;/Users/sureel/esp/esp-idf/components/esp32s3/Kconfig;/Users/sureel/esp/esp-idf/components/esp_common/Kconfig;/Users/sureel/esp/esp-idf/components/esp_hw_support/Kconfig;/Users/sureel/esp/esp-idf/components/esp_system/Kconfig;/Users/sureel/esp/esp-idf/components/freertos/Kconfig;/Users/sureel/esp/esp-idf/components/hal/Kconfig;/Users/sureel/esp/esp-idf/components/log/Kconfig;/Users/sureel/esp/esp-idf/components/newlib/Kconfig;/Users/sureel/esp/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/Users/sureel/esp/esp-idf/components/bootloader/Kconfig.projbuild;/Users/sureel/esp/esp-idf/components/esp_rom/Kconfig.projbuild;/Users/sureel/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/Users/sureel/esp/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32s3", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "freertos", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/Users/sureel/esp/esp-idf/components/bootloader", "/Users/sureel/esp/esp-idf/components/bootloader_support", "/Users/sureel/esp/esp-idf/components/efuse", "/Users/sureel/esp/esp-idf/components/esp32s3", "/Users/sureel/esp/esp-idf/components/esp_common", "/Users/sureel/esp/esp-idf/components/esp_hw_support", "/Users/sureel/esp/esp-idf/components/esp_rom", "/Users/sureel/esp/esp-idf/components/esp_system", "/Users/sureel/esp/esp-idf/components/esptool_py", "/Users/sureel/esp/esp-idf/components/freertos", "/Users/sureel/esp/esp-idf/components/hal", "/Users/sureel/esp/esp-idf/components/log", "/Users/sureel/esp/esp-idf/components/bootloader/subproject/main", "/Users/sureel/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/Users/sureel/esp/esp-idf/components/newlib", "/Users/sureel/esp/esp-idf/components/partition_table", "/Users/sureel/esp/esp-idf/components/soc", "/Users/sureel/esp/esp-idf/components/spi_flash", "/Users/sureel/esp/esp-idf/components/xtensa", "" ]
+}
