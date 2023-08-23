@@ -1,4 +1,4 @@
-# ESP-IDF Intallation Procedure 
+# ESP-IDF Installation Procedure: 
 
 > Source: [Link](https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/tutorial/install.md)
 
@@ -60,16 +60,35 @@
 - Windows: `%USERPROFILE%\.vscode\extensions\espressif.esp-idf-extension-VERSION`
 - Linux & MacOSX: `$HOME/.vscode/extensions/espressif.esp-idf-extension-VERSION`
 
+# Post Installation:
 
+In the bottom bar of your window you can view the following icons:
 
-cd esp-csi/examples/get-started/csi_send
-idf.py set-target esp32c3
-idf.py flash -b 115200 -p /dev/cu.usbmodem14101 monitor
-idf.py flash -b 115200 -p /dev/cu.usbmodem13301 monitor
+<p>
+  <img src="../../media/panel.png" alt="Setup wizard">
+</p>
 
-idf.py flash -b 115200 -p /dev/cu.usbmodem1201 monitor
+1. ESP-IDF Select Port to use: This allows the user to select the available serial port where their device is connected.
+2. ESP-IDF Select Espressif device target: This allows the user to set the device target.
+3. ESP-IDF Current Project: This selects the current folder.
+4. ESP-IDF SDK Configuration Editor
+5. ESP-IDF Full Clean: This cleans the project whereby the user can build the project from the start.
+6. ESP-IDF Build: This will compile the program code and will help in checking for potential errors.
+7. ESP-IDF Select flash method: This allows the user to select the flash method from JTAG, UART, and DFU.
+8. ESP-IDF flash device: This will download the project in the chip.
+9. ESP-IDF Monitor device: This gives the serial output of the chip.
+10. ESP-IDF Build, Flash, and Monitor
+11. ESP-IDF Open ESP-IDF Terminal: Clicking on this icon opens the terminal. If the terminal was already opened then it refreshes the terminal.
+12. ESP-IDF Execute custom task
 
+# Build and Flash
 
-idf.py flash -b 115200 -p /dev/cu.usbmodem14401 monitor
+We will first open the terminal by clicking the open ESP-IDF terminal icon. This opens the terminal which is very similar to the PowerShell. It has all the variables of the environment already set up.
 
-idf.py -b 921600 -p /dev/cu.usbmodem14401 monitor
+### To Flash csi_send
+```
+cd csi_send
+idf.py flash -b 115200 -p /dev/cu.#### monitor
+
+```
+> Follow the same procedure to flash csi_recv
