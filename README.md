@@ -92,3 +92,19 @@ idf.py flash -b 115200 -p /dev/cu.#### monitor
 
 ```
 > Follow the same procedure to flash csi_recv
+
+### Data Parsing
+
+> csi_data_read_parse.py can be used to parse data simultaneously from 2 ESP boards and save it as a CSV.
+
+There are certain parameters that have to be set before the script is run:
+
+```
+ESP_NUM = Total ESPs used for data acquisition
+Visualize = Set to True to generate dynamic CSI plots
+path = Data Directory
+serial_port = ESP port name
+file_name = CSV save name
+```
+
+

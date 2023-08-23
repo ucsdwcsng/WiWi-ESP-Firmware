@@ -214,40 +214,48 @@ if __name__ == '__main__':
         print(" Python version should >= 3.6")
         exit()
 
-    # parser = argparse.ArgumentParser(
-    #     description="Read CSI data from serial port and display it graphically")
-    # parser.add_argument('-p', '--port', dest='port', action='store', required=True,
-    #                     help="Serial port number of csv_recv device")
-    # parser.add_argument('-s', '--store', dest='store_file', action='store', default='./csi_data.csv',
-    #                     help="Save the data printed by the serial port to a file")
+  
+    """
+    ESP_NUM = Total ESPs used for data acquisition
+    Visualize = Set to True to generate dynamic CSI plots
+    path = Data Directory
+    serial_port = ESP port name
+    file_name = CSV save name
+    """
 
-    # args = parser.parse_args()
-    # serial_port = args.port
-    # file_name = args.store_file
+    ESP_NUM = 2
+    Visualize = False
 
     path = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 
     serial_port = "/dev/cu.usbmodem141101"
     file_name = "S3_wireless_intclk_1_99.csv"
     
-    serial_port2 = "/dev/cu.usbmodem141301"
-    file_name2 = "S3_wireless_intclk_99.csv"
+    if ESP_NUM == 2:
+        serial_port2 = "/dev/cu.usbmodem141301"
+        file_name2 = "S3_wireless_intclk_99.csv"
 
     app = QApplication(sys.argv)
 
     subthread = SubThread(serial_port, path+file_name)
-    subthread2 = SubThread(serial_port2, path+file_name2)
+
+    if ESP_NUM == 2:
+        subthread2 = SubThread(serial_port2, path+file_name2)
 
     subthread.start()
-    subthread2.start()
+    
+    if ESP_NUM == 2:
+        subthread2.start()
 
+    """To visualize the data"""
+    if Visualize:
+        window = csi_data_graphical_window()
+        window.show()  
+        if ESP_NUM == 2:    
+            window2 = csi_data_graphical_window2()
+            window2.show() 
 
-    window = csi_data_graphical_window()
-    window2 = csi_data_graphical_window2()
-
-    # window.show()
-    # window2.show()
-
+    """Timer for data acquisition"""
     timer = QTimer()
     timer.singleShot(4000, app.quit)  # 10 seconds = 10,000 ms
 
