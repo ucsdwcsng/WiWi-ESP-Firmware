@@ -65,7 +65,7 @@
 In the bottom bar of your window you can view the following icons:
 
 <p>
-  <img src="../../media/panel.png" alt="Setup wizard">
+  <img src="../..blob/main/media/panel.png" alt="Setup wizard">
 </p>
 
 1. ESP-IDF Select Port to use: This allows the user to select the available serial port where their device is connected.
