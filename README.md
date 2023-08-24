@@ -125,4 +125,6 @@ timer.singleShot(4000, app.quit)  # 10 seconds = 10,000 ms
 
 3. test_plot.ipynb : Notebook used to test and debug plotting code
 
+4. multi_plot_v2.py : Improved CSI plotter with packet statistics 
+
 

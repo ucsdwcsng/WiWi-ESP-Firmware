@@ -61,6 +61,8 @@ def match_packets(file1,file2,dir):
    matched_from_file2.to_csv(dir+file2, index=False)
       
 
+def to_3_sig(num):
+   return float("{:.2e}".format(num))
 
 def load_csi(fname, legacy_list, ht_list):
    """
