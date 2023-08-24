@@ -9,15 +9,15 @@ from prettytable import PrettyTable
 
 data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 
-data_1 = "CSI_1"
-data_2 = "CSI_2"
+# data_1 = "CSI_1"
+# data_2 = "CSI_2"
 
-data_1 = "S3_wired_intclk_2_1"
-data_2 = "S3_wired_intclk_1_1"
+data_1 = "S3_wired_intclk_1_5"
+data_2 = "S3_wired_intclk_2_5"
 
 # helper.match_packets(data_1, data_2, data_dir)
 
-packet = 152
+packet = 10
 
 
 # Read tables from CSV files
@@ -63,6 +63,7 @@ PhaseSub2 = np.column_stack((PMatrix2[:, 128:192], PMatrix2[:, 64:128]))
 PhaseSubShiftHigh1 = PhaseSub1.copy()
 PhaseSubShiftHigh2 = PhaseSub2.copy()
 
+# Correct the pi/2 shift, sometimes there are inversions which are not solved by just subtracting pi/2
 for i in range(PhaseSubShiftHigh1.shape[0]):
     # shift1 = PhaseSubShiftHigh1[i, 15]-PhaseSubShiftHigh1[i, 105]
     shift1 = np.min(PhaseSubShiftHigh1[i, 6: 60]) - \
@@ -118,39 +119,45 @@ gs_nested2 = gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=gs_main[0, 1])
 # First two nested subplots
 med = np.median(PMatrix1[packet])
 ax1 = plt.Subplot(fig, gs_nested[0])
-ax1.plot(PMatrix1[packet])
+ax1.plot(PMatrix1[packet], linewidth=2, color='blue')
+# ax1.axhline(med, color='red', linestyle='--', label='Median')
 ax1.set_ylabel("Phase #1 (deg)")
-ax1.set_ylim([-200,200])
+ax1.grid(True, which='both', linestyle='--', linewidth=0.5)
+# ax1.set_ylim([-200,200])
 ax1.set_title("Phase of selected packet")
 fig.add_subplot(ax1)
 
 med = np.median(PMatrix2[packet])
 ax2 = plt.Subplot(fig, gs_nested[1])
-ax2.plot(PMatrix2[packet])
+ax2.plot(PMatrix2[packet], linewidth=2, color='blue')
+ax2.grid(True, which='both', linestyle='--', linewidth=0.5)
 ax2.set_ylabel("Phase #2 (deg)")
 ax2.set_xlabel("subcarrier in raw order")
-ax2.set_ylim([-200, 200])
+# ax2.set_ylim([-200, 200])
 
 fig.add_subplot(ax2)
 
 # Remaining subplots
 med = np.median(yy1[packet])
 ax3 = plt.Subplot(fig, gs_nested2[0])
-ax3.plot(SubChannel, yy1[packet], 'kx')
+ax3.plot(SubChannel, yy1[packet], 'bx')
 ax3.set_ylim([med-50, med+50])
+ax3.grid(True, which='both', linestyle='--', linewidth=0.5)
 ax3.set_title("Phase after Cubic Spline fitting")
 fig.add_subplot(ax3)
 
 med = np.median(yy2[packet])
 ax4 = plt.Subplot(fig, gs_nested2[1])
-ax4.plot(SubChannel, yy2[packet], 'kx')
+ax4.plot(SubChannel, yy2[packet], 'bx')
+ax4.grid(True, which='both', linestyle='--', linewidth=0.5)
 ax4.set_ylim([med-50, med+50])
 ax4.set_xlabel("subcarrier in sub channel order")
 fig.add_subplot(ax4)
 
 med = np.median(yy1[packet]-yy2[packet])
 ax5 = plt.Subplot(fig, gs_main[1, 0])
-ax5.plot(SubChannel, yy1[packet]-yy2[packet], 'kx')
+ax5.plot(SubChannel, yy1[packet]-yy2[packet], 'bx')
+ax5.grid(True, which='both', linestyle='--', linewidth=0.5)
 # ax5.set_ylim([-200, 200])
 ax5.set_ylim([med-50, med+50])
 
@@ -161,20 +168,21 @@ ax5.set_title("\u0394Phase #1-#2 for selected packet")
 fig.add_subplot(ax5)
 
 stan = np.std((yy1[:, 8:120]-yy2[:, 8:120]), axis=1)
-print(len(stan))
+# print(len(stan))
 stan = stan[stan < 100]
-print(len(stan))
+# print(len(stan))
 
 # plt.hist(stan, bins=20)
 
 ax6 = plt.Subplot(fig, gs_main[1, 1])
-ax6.hist(stan, bins=20)
+ax6.hist(stan, bins=20, color='blue', edgecolor='black')
 ax6.set_ylabel("Frequency")
 ax6.set_xlabel("\u0394Phase (deg)")
 ax6.set_title("Histogram of Std, Dev. of \u0394Phase #1-#2 for selected packet")
+ax6.set_xlim((0,30))
+ax6.grid(axis='y', alpha=0.75)
 fig.add_subplot(ax6)
 
-# plt.tight_layout()
 
 results = PrettyTable()
 
@@ -184,11 +192,9 @@ results.field_names = ["Packet No.", "\u0394Phase Std. Dev.", "RSSI", "Total Pac
 # Add rows
 num_sel_packets =  len(stan[stan<5])
 results.add_row([packet, helper.to_3_sig(stan[packet]),
-                RSSI, lengCM, num_sel_packets, helper.to_3_sig(num_sel_packets*100/lengCM)])
-# results.add_row(["Bob", 22, "Los Angeles"])
-# results.add_row(["Charlie", 27, "San Francisco"])
+                RSSI, NumPCT, num_sel_packets, helper.to_3_sig(num_sel_packets*100/NumPCT)])
 print(results)
-# print(stan)
+
 plt.tight_layout()
 
 plt.show()

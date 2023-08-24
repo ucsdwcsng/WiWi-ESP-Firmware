@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "csi_send",
-    "project_version":    "4cb7af2-dirty",
+    "project_version":    "db4778a-dirty",
     "project_path":       "/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send",
     "idf_path":           "/Users/sureel/esp/esp-idf",
     "build_dir":          "/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/build",

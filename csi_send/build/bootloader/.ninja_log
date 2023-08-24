@@ -112,3 +112,5 @@
 8342	8577	1692852172310376612	/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/build/bootloader/.bin_timestamp	27c99b9360c56e4c
 8577	8669	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	557d019338e0deb0
 8577	8669	0	/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	557d019338e0deb0
+9	59	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	557d019338e0deb0
+9	59	0	/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	557d019338e0deb0
