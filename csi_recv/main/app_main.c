@@ -107,26 +107,8 @@ static void wifi_sniffer_packet_handler(void *buff, wifi_promiscuous_pkt_type_t 
     // Compare the source MAC address
     if (memcmp(hdr->addr2, CONFIG_CSI_SEND_MAC, 6) == 0)
     {
-        // This packet is from the MAC address we are interested in
-        // printf("Received packet from target MAC: ");
-
-        // int extracted_int = *((int *)(pkt->payload));
-        // printf("Size: %d \n", pkt->rx_ctrl.sig_len);
-        // printf("Payload: ");
-        // for (int i = 0; i < pkt->rx_ctrl.sig_len; i++)
-        // {
-        // printf("%d ", pkt->payload[38]);
-        // printf("%d ", pkt->payload[39]);
-        // printf("%d ", pkt->payload[40]);
-
         ets_printf(",%d", pkt->payload[39]);
         ets_printf(",%d", pkt->payload[40]);
-        // printf("%d ", pkt->payload[41]);
-        // printf("%d ", pkt->payload[42]);
-
-        // }
-        // printf("Extracted Integer: %d\n", extracted_int);
-
         printf("\n");
     }
 }
@@ -164,8 +146,7 @@ SW4 , TX to WiWi or RX to WiWi -> Controlled by ESPTX GPIO6: high for output1 (T
 
 void esptx_set_independent_antenna(bool tx_sma, bool rx_sma)
 {
-//     sprintf(print_buffer, "ESP TX set independent antenna, tx_sma=%d, rx_sma=%d\n", tx_sma, rx_sma);
-//     Serial.write(print_buffer);
+
     // turn off attenuators
     gpio_set_level(1, 1);
     // select TX path
@@ -248,17 +229,12 @@ void app_main()
 
     if (!gpio_get_level(36) && !gpio_get_level(37))
     {
-        // led_pin = 38;
         esptx_setup();
         ets_printf("\n**********   This is TX ESP   ***********\n");
-        // static const uint8_t CONFIG_CSI_SEND_MAC[] = {0x1a, 0x00, 0x00, 0x00, 0x00, 0x00};
     }
     else if (gpio_get_level(36) && !gpio_get_level(37))
     {
-        // led_pin = 21;
         ets_printf("\n**********   This is RX ESP   ***********\n");
-        // esprx_setup();
-        // static const uint8_t CONFIG_CSI_SEND_MAC[] = {0x2a, 0x00, 0x00, 0x00, 0x00, 0x00};
     }
 
         esp_err_t ret = nvs_flash_init();

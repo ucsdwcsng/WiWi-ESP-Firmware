@@ -107,4 +107,22 @@ serial_port = ESP port name
 file_name = CSV save name
 ```
 
+> This is a timer based aquisition script whose value can be modified.
+
+```
+"""Timer for data acquisition"""
+timer = QTimer()
+timer.singleShot(4000, app.quit)  # 10 seconds = 10,000 ms
+```
+
+### Data Processing
+
+> The Data_Processing folder houses all the scripts used for CSI Processing
+
+1. multi_plot.py & helper.py : Built on top of the code written by Aditya Arun (WCSNG) for CSI processing
+
+2. NIST_plot.py : Based on the MATLAB CSI plotting script used by NIST 
+
+3. test_plot.ipynb : Notebook used to test and debug plotting code
+
 
