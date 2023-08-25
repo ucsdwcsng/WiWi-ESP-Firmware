@@ -88,7 +88,7 @@ We will first open the terminal by clicking the open ESP-IDF terminal icon. This
 ### To Flash csi_send
 ```
 cd csi_send
-idf.py flash -b 115200 -p /dev/cu.#### monitor
+idf.py flash -b 115200 -p /dev/cu.usbmodem13101 monitor
 
 ```
 > Follow the same procedure to flash csi_recv
@@ -126,5 +126,11 @@ timer.singleShot(4000, app.quit)  # 10 seconds = 10,000 ms
 3. test_plot.ipynb : Notebook used to test and debug plotting code
 
 4. multi_plot_v2.py : Improved CSI plotter with packet statistics 
+
+> Plot created with multi_plot_v2.py:
+
+<p>
+  <img src="../../blob/main/media/CSI_Plot.png" alt="Setup wizard">
+</p>
 
 

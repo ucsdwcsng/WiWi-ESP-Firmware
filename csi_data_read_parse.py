@@ -228,12 +228,12 @@ if __name__ == '__main__':
 
     path = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 
-    serial_port = "/dev/cu.usbmodem141101"
-    file_name = "S3_wireless_intclk_1_99.csv"
+    serial_port = "/dev/cu.usbmodem13101"
+    file_name = "S3_wireless_intclk_1_4.csv"
     
     if ESP_NUM == 2:
-        serial_port2 = "/dev/cu.usbmodem141301"
-        file_name2 = "S3_wireless_intclk_99.csv"
+        serial_port2 = "/dev/cu.usbmodem13301"
+        file_name2 = "S3_wireless_intclk_2_4.csv"
 
     app = QApplication(sys.argv)
 
@@ -257,6 +257,6 @@ if __name__ == '__main__':
 
     """Timer for data acquisition"""
     timer = QTimer()
-    timer.singleShot(4000, app.quit)  # 10 seconds = 10,000 ms
+    timer.singleShot(40000, app.quit)  # 10 seconds = 10,000 ms
 
     sys.exit(app.exec())

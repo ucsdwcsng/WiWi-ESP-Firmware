@@ -12,12 +12,12 @@ data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 # data_1 = "CSI_1"
 # data_2 = "CSI_2"
 
-data_1 = "S3_wired_intclk_1_5"
-data_2 = "S3_wired_intclk_2_5"
+data_1 = "S3_wireless_intclk_1_3"
+data_2 = "S3_wireless_intclk_2_3"
 
-# helper.match_packets(data_1, data_2, data_dir)
+helper.match_packets(data_1, data_2, data_dir)
 
-packet = 10
+packet = 15
 
 
 # Read tables from CSV files
@@ -66,19 +66,19 @@ PhaseSubShiftHigh2 = PhaseSub2.copy()
 # Correct the pi/2 shift, sometimes there are inversions which are not solved by just subtracting pi/2
 for i in range(PhaseSubShiftHigh1.shape[0]):
     # shift1 = PhaseSubShiftHigh1[i, 15]-PhaseSubShiftHigh1[i, 105]
-    shift1 = np.min(PhaseSubShiftHigh1[i, 6: 60]) - \
-        np.max(PhaseSubShiftHigh1[i, 66: 120])
+    shift1 = np.mean(PhaseSubShiftHigh1[i, 6: 60]) - \
+        np.mean(PhaseSubShiftHigh1[i, 66: 120])
     multiplier1 = shift1//90+1
     # shift2 = PhaseSubShiftHigh2[i, 15]-PhaseSubShiftHigh2[i, 105]
-    shift2 = np.min(PhaseSubShiftHigh2[i, 6: 60]) - \
-        np.max(PhaseSubShiftHigh2[i, 66: 120])
+    shift2 = np.mean(PhaseSubShiftHigh2[i, 6: 60]) - \
+        np.mean(PhaseSubShiftHigh2[i, 66: 120])
     multiplier2 = shift2//90+1
 
     if shift1 > 0:
         PhaseSubShiftHigh1[i, 66:123] -= 90*multiplier1  # np.pi/2
     else:
         PhaseSubShiftHigh1[i, 66:123] += 90*multiplier1  # np.pi/2
-    if shift1 > 0:
+    if shift2 > 0:
         PhaseSubShiftHigh2[i, 66:123] -= 90*multiplier2  # np.pi/2
     else:
         PhaseSubShiftHigh2[i, 66:123] += 90*multiplier2  # np.pi/2
@@ -148,9 +148,14 @@ fig.add_subplot(ax3)
 
 med = np.median(yy2[packet])
 ax4 = plt.Subplot(fig, gs_nested2[1])
-ax4.plot(SubChannel, yy2[packet], 'bx')
+if data_1 == data_2:
+    ax4.plot(SubChannel, yy1.T)
+    ax4.set_ylim([-200, 200])
+else:
+    ax4.plot(SubChannel, yy2[packet], 'bx')
+    ax4.set_ylim([med-50, med+50])
+
 ax4.grid(True, which='both', linestyle='--', linewidth=0.5)
-ax4.set_ylim([med-50, med+50])
 ax4.set_xlabel("subcarrier in sub channel order")
 fig.add_subplot(ax4)
 
@@ -168,7 +173,7 @@ ax5.set_title("\u0394Phase #1-#2 for selected packet")
 fig.add_subplot(ax5)
 
 stan = np.std((yy1[:, 8:120]-yy2[:, 8:120]), axis=1)
-# print(len(stan))
+# print((stan))
 stan = stan[stan < 100]
 # print(len(stan))
 
@@ -176,9 +181,9 @@ stan = stan[stan < 100]
 
 ax6 = plt.Subplot(fig, gs_main[1, 1])
 ax6.hist(stan, bins=20, color='blue', edgecolor='black')
-ax6.set_ylabel("Frequency")
+ax6.set_ylabel("No. of Packets (#)")
 ax6.set_xlabel("\u0394Phase (deg)")
-ax6.set_title("Histogram of Std, Dev. of \u0394Phase #1-#2 for selected packet")
+ax6.set_title("Histogram of Std, Dev. of \u0394Phase #1-#2 across Sub-C [8-120]")
 ax6.set_xlim((0,30))
 ax6.grid(axis='y', alpha=0.75)
 fig.add_subplot(ax6)
@@ -187,12 +192,12 @@ fig.add_subplot(ax6)
 results = PrettyTable()
 
 # Set column names
-results.field_names = ["Packet No.", "\u0394Phase Std. Dev.", "RSSI", "Total Packets", "Packets with \u0394Phase Std. Dev. < 5", "% Packets"]
+results.field_names = ["Packet No.", "\u0394Phase Std. Dev.", "RSSI", "Total Packets" ]#, "Packets with \u0394Phase Std. Dev. < 5", "% Packets"]
 
 # Add rows
 num_sel_packets =  len(stan[stan<5])
 results.add_row([packet, helper.to_3_sig(stan[packet]),
-                RSSI, NumPCT, num_sel_packets, helper.to_3_sig(num_sel_packets*100/NumPCT)])
+                RSSI, NumPCT]) #, num_sel_packets, helper.to_3_sig(num_sel_packets*100/NumPCT)])
 print(results)
 
 plt.tight_layout()

@@ -38,8 +38,8 @@ def create_packet_id(row):
     return str(row['packet']) + str(row['idx'])
 
 def match_packets(file1,file2,dir):
-   file1_data = read_csv_file(dir+"/"+file1)
-   file2_data = read_csv_file(dir+"/"+file2)
+   file1_data = read_csv_file(dir+file1+".csv")
+   file2_data = read_csv_file(dir+file2+".csv")
 
    # Step 2: Create a new column 'PacketID' in each DataFrame by concatenating the two parts of the Packet ID
    file1_data['PacketID'] = file1_data.apply(create_packet_id, axis=1)

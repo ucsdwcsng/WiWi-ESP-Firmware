@@ -9,8 +9,8 @@ data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 csi_long = dict()
 csi_long2 = dict()
 
-file_1 = "S3_wireless_intclk_1_2.csv"
-file_2 = "S3_wireless_intclk_2_2.csv"
+file_1 = "S3_wireless_intclk_txrx_1_1.csv"
+file_2 = "S3_wireless_intclk_txrx_1_1.csv"
 
 helper.match_packets(file_1, file_2, data_dir) # Comment this out if packet matching is not required 
 

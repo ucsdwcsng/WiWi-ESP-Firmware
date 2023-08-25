@@ -1,0 +1,10 @@
+Compiler supported targets: xtensa-esp32s3-elf
+
+Project commit: 4f918e3-dirty
+CMake Error at run_serial_tool.cmake:66 (message):
+  
+  /Users/sureel/.espressif/python_env/idf5.1_py3.10_env/bin/python;;/Users/sureel/esp/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32s3
+  failed.
+
+
+
