@@ -164,7 +164,6 @@ fig.add_subplot(ax6)
 ax7 = plt.Subplot(fig, gs_nested3[0])
 ax7.boxplot(stan, vert=False,  widths=0.8)
 ax7.set_yticks([])
-ax7.minor
 ax7.set_xlim((0, 30))
 ax7.set_ylabel('Boxplot', color='black')
 ax7.set_title("Histogram of Std, Dev. of \u0394Phase #1-#2 across Sub-C [8-120]")
