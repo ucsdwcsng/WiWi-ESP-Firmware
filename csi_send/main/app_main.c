@@ -12,13 +12,17 @@
 #include <unistd.h>
 
 #include "nvs_flash.h"
-
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#include "esp_log.h"
 #include "esp_mac.h"
 #include "esp_log.h"
 #include "esp_wifi.h"
 #include "esp_netif.h"
 #include "esp_now.h"
-
+#include "driver/gpio.h"
+#include "esp_system.h"
+#include "nvs_flash.h" 
+#include "esp_system.h"
 
 #define CONFIG_LESS_INTERFERENCE_CHANNEL    11
 #define CONFIG_SEND_FREQUENCY               50
@@ -46,49 +50,111 @@ static void wifi_init()
     ESP_ERROR_CHECK(esp_wifi_set_mac(WIFI_IF_STA, CONFIG_CSI_SEND_MAC));
 }
 
-void app_main()
+void esptx_set_independent_antenna(bool tx_sma, bool rx_sma)
 {
+
+    // turn off attenuators
+    gpio_set_level(1, 1);
+    // select TX path
+    gpio_set_level(7, 1);
+    // select TX antenna
+    if (tx_sma)
+    {
+      gpio_set_level(8, 1);
+      gpio_set_level(2, 0);
+    }
+    else
+    {
+      gpio_set_level(8, 0);
+      gpio_set_level(2, 1);
+    }
+    // select WiWi (in this case RX) antenna
+    if (rx_sma)
+    {
+      gpio_set_level(4, 1);
+      gpio_set_level(5, 0);
+    }
+    else
+    {
+      gpio_set_level(4, 0);
+      gpio_set_level(5, 1);
+    }
+    // select RX to WiWi antenna
+    gpio_set_level(6, 0);
+}
+
+void esptx_setup()
+{
+    gpio_set_direction(GPIO_NUM_1, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_4, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_5, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_6, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_7, GPIO_MODE_OUTPUT);
+    gpio_set_direction(GPIO_NUM_8, GPIO_MODE_OUTPUT);
+
+    esptx_set_independent_antenna(true, true); 
+    //  esptx_set_independent_antenna(false,false);
+}
+
+
+    void app_main()
+    {
+
+    gpio_set_direction(GPIO_NUM_36, GPIO_MODE_INPUT);
+    gpio_set_direction(GPIO_NUM_37, GPIO_MODE_INPUT);
+
+    if (!gpio_get_level(36) && !gpio_get_level(37))
+    {
+      esptx_setup();
+      // ets_vprintf("\n**********   This is TX ESP   ***********\n");
+    }
+    else if (gpio_get_level(36) && !gpio_get_level(37))
+    {
+      // ets_vprintf("\n**********   This is RX ESP   ***********\n");
+    }
+
     /**
      * @breif Initialize NVS
      */
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
       ESP_ERROR_CHECK(nvs_flash_erase());
       ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
+      }
+      ESP_ERROR_CHECK(ret);
 
-    /**
-     * @breif Initialize Wi-Fi
-     */
-    wifi_init();
+      /**
+       * @breif Initialize Wi-Fi
+       */
+      wifi_init();
 
+      /**
+       * @breif Initialize ESP-NOW
+       *        ESP-NOW protocol see: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html
+       */
+      ESP_ERROR_CHECK(esp_now_init());
+      ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t *)"pmk1234567890123"));
 
-    /**
-     * @breif Initialize ESP-NOW
-     *        ESP-NOW protocol see: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html
-     */
-    ESP_ERROR_CHECK(esp_now_init());
-    ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t *)"pmk1234567890123"));
+      esp_now_peer_info_t peer = {
+          .channel = CONFIG_LESS_INTERFERENCE_CHANNEL,
+          .ifidx = WIFI_IF_STA,
+          .encrypt = false,
+          .peer_addr = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
+      };
+      ESP_ERROR_CHECK(esp_now_add_peer(&peer));
 
-    esp_now_peer_info_t peer = {
-        .channel   = CONFIG_LESS_INTERFERENCE_CHANNEL,
-        .ifidx     = WIFI_IF_STA,    
-        .encrypt   = false,   
-        .peer_addr = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
-    };
-    ESP_ERROR_CHECK(esp_now_add_peer(&peer));
+      ESP_LOGI(TAG, "================ CSI SEND ================");
+      ESP_LOGI(TAG, "wifi_channel: %d, send_frequency: %d, mac: " MACSTR,
+               CONFIG_LESS_INTERFERENCE_CHANNEL, CONFIG_SEND_FREQUENCY, MAC2STR(CONFIG_CSI_SEND_MAC));
 
-    ESP_LOGI(TAG, "================ CSI SEND ================");
-    ESP_LOGI(TAG, "wifi_channel: %d, send_frequency: %d, mac: " MACSTR,
-             CONFIG_LESS_INTERFERENCE_CHANNEL, CONFIG_SEND_FREQUENCY, MAC2STR(CONFIG_CSI_SEND_MAC));
-
-    for (uint32_t count = 0;; ++count)
-    {
-      esp_err_t ret = esp_now_send(peer.peer_addr, &count, sizeof(uint32_t));
-
-      if (ret != ESP_OK)
+      for (uint32_t count = 0;; ++count)
       {
+        esp_err_t ret = esp_now_send(peer.peer_addr, &count, sizeof(uint32_t));
+
+        if (ret != ESP_OK)
+        {
           ESP_LOGW(TAG, "<%s> ESP-NOW send error", esp_err_to_name(ret));
         }
 

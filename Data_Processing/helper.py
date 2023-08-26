@@ -93,6 +93,32 @@ def load_csi(fname, legacy_list, ht_list):
 
    return csi_l, csi_ht, all_data
 
+def process_csi (data):
+   
+   NumPCT = (len(data))
+   lengCM = data.iloc[0, 22]  # Assuming indexing starts from 0
+
+
+   C1, C2, CMatrix1, PMatrix1, CMatrix2, PMatrix2 = [], [], [], [], [], []
+
+
+   for index, row in data.iterrows():
+      C1 = list(map(int, row[24].strip('[]').split(',')))
+
+      c_matrix_1_row = []
+
+      for m in range(0, lengCM, 2):
+        c1_complex = complex(C1[m + 1], C1[m])
+        c_matrix_1_row.append(c1_complex)
+
+
+      CMatrix1.append(c_matrix_1_row)
+
+
+   CMatrix1 = np.array(CMatrix1)
+
+   return CMatrix1
+
 def compute_offsets(csi, freq, fc):
    """
    Computs the sampling time offset, sampling frequency offsets from the intercept and slope of the CSI phases

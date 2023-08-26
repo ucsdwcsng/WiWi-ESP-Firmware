@@ -1,0 +1,4 @@
+EXTRA_COMPONENT_DIRS: 
+Compiler supported targets: xtensa-esp32s3-elf
+
+Project commit: fac969a-dirty

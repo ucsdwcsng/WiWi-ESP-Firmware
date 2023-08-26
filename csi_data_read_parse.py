@@ -223,13 +223,13 @@ if __name__ == '__main__':
     file_name = CSV save name
     """
 
-    ESP_NUM = 2
+    ESP_NUM = 1
     Visualize = False
 
     path = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 
-    serial_port = "/dev/cu.usbmodem13101"
-    file_name = "S3_wireless_intclk_1_4.csv"
+    serial_port = "/dev/cu.usbmodem142101"
+    file_name = "S3_wired_intclk_txrx_1_1.csv.csv"
     
     if ESP_NUM == 2:
         serial_port2 = "/dev/cu.usbmodem13301"
@@ -257,6 +257,6 @@ if __name__ == '__main__':
 
     """Timer for data acquisition"""
     timer = QTimer()
-    timer.singleShot(40000, app.quit)  # 10 seconds = 10,000 ms
+    timer.singleShot(20000, app.quit)  # 10 seconds = 10,000 ms
 
     sys.exit(app.exec())

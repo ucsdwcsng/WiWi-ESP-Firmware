@@ -9,8 +9,8 @@ data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 csi_long = dict()
 csi_long2 = dict()
 
-file_1 = "S3_wireless_intclk_txrx_1_1.csv"
-file_2 = "S3_wireless_intclk_txrx_1_1.csv"
+file_1 = "S3_wired_intclk_txrx_1_1.csv"
+file_2 = "S3_wired_intclk_txrx_1_1.csv"
 
 helper.match_packets(file_1, file_2, data_dir) # Comment this out if packet matching is not required 
 
@@ -50,8 +50,10 @@ phases2 = np.unwrap(np.angle(csi_long2["h"]), axis=1) * 180 / np.pi
 
 # Plot DC phases over packets for first dataset
 # axs[1, 0].scatter(np.arange(len(dc_phases_movement)),(dc_phases_movement) * 180 / np.pi, s=5)
-axs[0, 0].plot(helper.f_sub, phases[0][:] - phases2[0][:])
+# axs[0, 0].plot(helper.f_sub, phases[0][:] - phases2[0][:])
 # axs[1].plot(helper.f_sub, phases[0][:] - phases2[0][:])
+
+axs[0, 0].plot(helper.f_sub, phases[15])
 
 axs[0, 0].set_title("Phase Difference across subcarriers for Packet 1")
 axs[0, 0].set_xlabel("Sub-C Frequency")

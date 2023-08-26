@@ -1,3 +1,4 @@
+-- IDF_TARGET is not set, guessed 'esp32s3' from sdkconfig '/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/sdkconfig'
 -- Found Git: /opt/homebrew/bin/git (found version "2.36.1") 
 -- The C compiler identification is GNU 12.2.0
 -- The CXX compiler identification is GNU 12.2.0
@@ -21,7 +22,7 @@ Loading defaults file /Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/sdkconfig
 /Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/sdkconfig.defaults:4 CONFIG_ESP32_WIFI_CSI_ENABLED was replaced with CONFIG_ESP_WIFI_CSI_ENABLED
 /Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/sdkconfig.defaults:5 CONFIG_ESP32_WIFI_AMPDU_TX_ENABLED was replaced with CONFIG_ESP_WIFI_AMPDU_TX_ENABLED
 /Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/sdkconfig.defaults:6 CONFIG_ESP32_WIFI_DYNAMIC_TX_BUFFER_NUM was replaced with CONFIG_ESP_WIFI_DYNAMIC_TX_BUFFER_NUM
-/var/folders/wf/vpyfzw3j1g7bfvkfgnfl2j1c0000gn/T/kconfgen_tmp7u71xjep:5 line was updated to CONFIG_ESP_WIFI_AMPDU_TX_ENABLED=n
+/var/folders/wf/vpyfzw3j1g7bfvkfgnfl2j1c0000gn/T/kconfgen_tmpbd8utkhy:5 line was updated to CONFIG_ESP_WIFI_AMPDU_TX_ENABLED=n
 -- Looking for sys/types.h
 -- Looking for sys/types.h - found
 -- Looking for stdint.h
@@ -33,7 +34,7 @@ Loading defaults file /Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/sdkconfig
 -- Found Python3: /Users/sureel/.espressif/python_env/idf5.1_py3.10_env/bin/python (found version "3.10.4") found components: Interpreter 
 -- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
 -- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
--- App "csi_send" version: 4cb7af2-dirty
+-- App "csi_send" version: fac969a-dirty
 -- Adding linker script /Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send/build/esp-idf/esp_system/ld/memory.ld
 -- Adding linker script /Users/sureel/esp/esp-idf/components/esp_system/ld/esp32s3/sections.ld.in
 -- Adding linker script /Users/sureel/esp/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.ld

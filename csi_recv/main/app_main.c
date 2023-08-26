@@ -202,8 +202,7 @@ void esptx_setup()
 
 
     // default, set TX and RX to their own chip antennas
-    esptx_set_independent_antenna(false, false);
-    //  esptx_set_independent_antenna(false,false);
+    esptx_set_independent_antenna(true, true);    //  esptx_set_independent_antenna(false,false);
 
     //  esptx_disconnect_txrx_wiwi();
 

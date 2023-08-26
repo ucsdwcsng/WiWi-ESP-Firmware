@@ -88,7 +88,7 @@ We will first open the terminal by clicking the open ESP-IDF terminal icon. This
 ### To Flash csi_send
 ```
 cd csi_send
-idf.py flash -b 115200 -p /dev/cu.usbmodem13101 monitor
+idf.py flash -b 115200 -p /dev/cu.usbmodem142101 monitor
 
 ```
 > Follow the same procedure to flash csi_recv
