@@ -38,27 +38,33 @@ def create_packet_id(row):
     return str(row['packet']) + str(row['idx'])
 
 def match_packets(file1,file2,dir):
-   file1_data = read_csv_file(dir+file1+".csv")
-   file2_data = read_csv_file(dir+file2+".csv")
+   file1 = file1+".csv"
+   file2 = file2+".csv"
 
-   # Step 2: Create a new column 'PacketID' in each DataFrame by concatenating the two parts of the Packet ID
-   file1_data['PacketID'] = file1_data.apply(create_packet_id, axis=1)
-   file2_data['PacketID'] = file2_data.apply(create_packet_id, axis=1)
+   file1_data = read_csv_file(dir+file1)
+   file2_data = read_csv_file(dir+file2)
 
-   matched_packets = pd.merge(file1_data, file2_data, on='PacketID', how='inner')
+   try:
+      # Step 2: Create a new column 'PacketID' in each DataFrame by concatenating the two parts of the Packet ID
+      file1_data['PacketID'] = file1_data.apply(create_packet_id, axis=1)
+      file2_data['PacketID'] = file2_data.apply(create_packet_id, axis=1)
 
-   matched_from_file1 = matched_packets.iloc[:, :(file1_data).shape[1]-1]
-   matched_from_file2 = matched_packets.iloc[:, (file1_data).shape[1]:2*(file1_data).shape[1]-1]
+      matched_packets = pd.merge(file1_data, file2_data, on='PacketID', how='inner')
 
-   matched_from_file1.columns = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
-                      "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
+      matched_from_file1 = matched_packets.iloc[:, :(file1_data).shape[1]-1]
+      matched_from_file2 = matched_packets.iloc[:, (file1_data).shape[1]:2*(file1_data).shape[1]-1]
 
-   matched_from_file2.columns = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
-                      "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
+      matched_from_file1.columns = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
+                        "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
 
-   # Step 5: Save the DataFrames to new CSV files
-   matched_from_file1.to_csv(dir+file1, index=False)
-   matched_from_file2.to_csv(dir+file2, index=False)
+      matched_from_file2.columns = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
+                        "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
+
+      # Step 5: Save the DataFrames to new CSV files
+      matched_from_file1.to_csv(dir+file1, index=False)
+      matched_from_file2.to_csv(dir+file2, index=False)
+   except:
+      return
       
 
 def to_3_sig(num):
