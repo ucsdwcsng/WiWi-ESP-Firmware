@@ -1,0 +1,67 @@
+[1/5] cd /Users/sureel/VS_Code/WiWi-ESP-Firmware/ftm/build/esp-idf/esptool_py && /Users/sureel/.espressif/python_env/idf5.1_py3.10_env/bin/python /Users/sureel/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /Users/sureel/VS_Code/WiWi-ESP-Firmware/ftm/build/partition_table/partition-table.bin /Users/sureel/VS_Code/WiWi-ESP-Firmware/ftm/build/ftm.bin
+ftm.bin binary size 0xc86c0 bytes. Smallest app partition is 0x100000 bytes. 0x37940 bytes (22%) free.
+[2/5] Performing build step for 'bootloader'
+[1/1] cd /Users/sureel/VS_Code/WiWi-ESP-Firmware/ftm/build/bootloader/esp-idf/esptool_py && /Users/sureel/.espressif/python_env/idf5.1_py3.10_env/bin/python /Users/sureel/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /Users/sureel/VS_Code/WiWi-ESP-Firmware/ftm/build/bootloader/bootloader.bin
+Bootloader binary size 0x5200 bytes. 0x2e00 bytes (36%) free.
+[2/3] cd /Users/sureel/esp/esp-idf/components/esptool_py && /opt/homebrew/Cellar/cmake/3.23.2/bin/cmake -D IDF_PATH=/Users/sureel/esp/esp-idf -D "SERIAL_TOOL=/Users/sureel/.espressif/python_env/idf5.1_py3.10_env/bin/python;;/Users/sureel/esp/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32s3" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/Users/sureel/VS_Code/WiWi-ESP-Firmware/ftm/build -P /Users/sureel/esp/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32s3 -p /dev/cu.usbmodem1301 -b 115200 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 bootloader/bootloader.bin 0x10000 ftm.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.7.dev1
+Serial port /dev/cu.usbmodem1301
+Connecting...
+Chip is ESP32-S3 (QFN56) (revision v0.1)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+MAC: 34:85:18:ac:be:e8
+Uploading stub...
+Running stub...
+Stub running...
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00010000 to 0x000d8fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Compressed 20992 bytes to 13326...
+Writing at 0x00000000... (100 %)
+Wrote 20992 bytes (13326 compressed) at 0x00000000 in 0.4 seconds (effective 479.8 kbit/s)...
+Hash of data verified.
+Compressed 820928 bytes to 523549...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001bf16... (6 %)
+Writing at 0x000269d5... (9 %)
+Writing at 0x0002ba16... (12 %)
+Writing at 0x00034815... (15 %)
+Writing at 0x0003c21c... (18 %)
+Writing at 0x00042126... (21 %)
+Writing at 0x000484ae... (25 %)
+Writing at 0x0004dd5f... (28 %)
+Writing at 0x000541e0... (31 %)
+Writing at 0x00059f0b... (34 %)
+Writing at 0x0005fc03... (37 %)
+Writing at 0x00064c3b... (40 %)
+Writing at 0x00069b9b... (43 %)
+Writing at 0x0006ecdd... (46 %)
+Writing at 0x00073d21... (50 %)
+Writing at 0x00078fd6... (53 %)
+Writing at 0x0007e392... (56 %)
+Writing at 0x000841f1... (59 %)
+Writing at 0x00089a14... (62 %)
+Writing at 0x0008f115... (65 %)
+Writing at 0x000948f6... (68 %)
+Writing at 0x00099fc0... (71 %)
+Writing at 0x0009f9c9... (75 %)
+Writing at 0x000a533e... (78 %)
+Writing at 0x000aaf57... (81 %)
+Writing at 0x000b068c... (84 %)
+Writing at 0x000b6c3a... (87 %)
+Writing at 0x000bed46... (90 %)
+Writing at 0x000c6f82... (93 %)
+Writing at 0x000cd1e5... (96 %)
+Writing at 0x000d3172... (100 %)
+Wrote 820928 bytes (523549 compressed) at 0x00010000 in 5.4 seconds (effective 1214.9 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 103...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (103 compressed) at 0x00008000 in 0.0 seconds (effective 538.8 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

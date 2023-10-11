@@ -1,0 +1,14 @@
+EXTRA_COMPONENT_DIRS: 
+Compiler supported targets: xtensa-esp32s3-elf
+
+CMake Error at /Users/sureel/esp/esp-idf/tools/cmake/project.cmake:593 (add_executable):
+  The target name "/Users/sureel/VS_Code/WiWi-ESP-Firmware.elf" is reserved
+  or not valid for certain CMake features, such as generator expressions, and
+  may result in undefined behavior.
+Call Stack (most recent call first):
+  CMakeLists.txt:12 (project)
+
+
+Project commit: v5.1.1-dirty
+Setting the build directory to the project directory is not supported. Suggest dropping --build-dir option, the default is a 'build' subdirectory inside the project directory.
+Setting the build directory to the project directory is not supported. Suggest dropping --build-dir option, the default is a 'build' subdirectory inside the project directory.

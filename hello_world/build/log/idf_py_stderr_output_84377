@@ -1,0 +1,15 @@
+[0;33m--- idf_monitor on /dev/cu.usbmodem12301 115200 ---[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---[0m
+[0;33m0x42007580: uart_ll_get_txfifo_len at /Users/sureel/esp/esp-idf/components/hal/esp32s3/include/hal/uart_ll.h:314 (discriminator 1)
+ (inlined by) uart_tx_char at /Users/sureel/esp/esp-idf/components/vfs/vfs_uart.c:164 (discriminator 1)
+[0m
+[0;33m0x4037524c: call_start_cpu1 at /Users/sureel/esp/esp-idf/components/esp_system/port/cpu_start.c:154
+[0m
+[1;31mNone[0m
+[0;33mWaiting for the device to reconnect[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m[0m
+[0;33m0x4037b25a: vTaskDelete at /Users/sureel/esp/esp-idf/components/freertos/FreeRTOS-Kernel/tasks.c:1468
+[0m
+[0;33m0x4037547c: call_start_cpu0 at /Users/sureel/esp/esp-idf/components/esp_system/port/cpu_start.c:482 (discriminator 3)
+[0m
+[0;33mWarning: checksum mismatch between flashed and built applications. Checksum of built application is eff62488815032b0c6403abdc81db4d30af7b0d38d2495d31136359e7eeb944f[0m
+[0m

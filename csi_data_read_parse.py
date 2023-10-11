@@ -27,6 +27,8 @@ import json
 import argparse
 import pandas as pd
 import numpy as np
+import datetime
+
 
 import serial
 from os import path
@@ -70,7 +72,7 @@ csi_vaid_subcarrier_color += [(i * color_step, i * color_step, i * color_step) f
 CSI_DATA_INDEX = 200  # buffer size
 CSI_DATA_COLUMNS = len(csi_vaid_subcarrier_index)
 DATA_COLUMNS_NAMES = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
-                      "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
+                      "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx", "timestamp"]
 csi_data_array = np.zeros(
     [CSI_DATA_INDEX, CSI_DATA_COLUMNS], dtype=np.complex64)
 
@@ -139,7 +141,7 @@ class csi_data_graphical_window2(QWidget):
 
 
 def csi_data_read_parse(port: str, csv_writer):
-    ser = serial.Serial(port=port, baudrate=250000,
+    ser = serial.Serial(port=port, baudrate=5000000,
                         bytesize=8, parity='N', stopbits=1)
     if ser.isOpen():
         print("open success")
@@ -161,7 +163,7 @@ def csi_data_read_parse(port: str, csv_writer):
         csv_reader = csv.reader(StringIO(strings))
         csi_data = next(csv_reader)
 
-        if len(csi_data) != len(DATA_COLUMNS_NAMES):
+        if len(csi_data) != len(DATA_COLUMNS_NAMES)-1:
             print("element number is not equal")
             continue
 
@@ -175,7 +177,10 @@ def csi_data_read_parse(port: str, csv_writer):
             print(f"element number is not equal: {len(csi_raw_data)}")
             continue
 
+        timestamp = datetime.datetime.now().timestamp()
+        csi_data.append(str(timestamp))
         csv_writer.writerow(csi_data)
+        # csv_writer.writerow(csi_data)
 
         # Rotate data to the left
         csi_data_array[:-1] = csi_data_array[1:]
@@ -228,12 +233,12 @@ if __name__ == '__main__':
 
     path = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 
-    serial_port = "/dev/cu.usbmodem142101"
-    file_name = "S3_wired_intclk_txrx_1_1.csv.csv"
+    serial_port = "/dev/cu.usbmodem14101"
+    file_name = "S3_wired_FTM.csv"
     
     if ESP_NUM == 2:
-        serial_port2 = "/dev/cu.usbmodem13301"
-        file_name2 = "S3_wireless_intclk_2_4.csv"
+        serial_port2 = "/dev/cu.usbmodem132101"
+        file_name2 = "S3_wired_2_3.csv"
 
     app = QApplication(sys.argv)
 

@@ -55,15 +55,16 @@ def match_packets(file1,file2,dir):
       matched_from_file2 = matched_packets.iloc[:, (file1_data).shape[1]:2*(file1_data).shape[1]-1]
 
       matched_from_file1.columns = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
-                        "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
+                        "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx","timestamp"]
 
       matched_from_file2.columns = ["type", "id", "mac", "rssi", "rate", "sig_mode", "mcs", "bandwidth", "smoothing", "not_sounding", "aggregation", "stbc", "fec_coding",
-                        "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx"]
+                                    "sgi", "noise_floor", "ampdu_cnt", "channel", "secondary_channel", "local_timestamp", "ant", "sig_len", "rx_state", "len", "first_word", "data", "packet", "idx", "timestamp"]
 
       # Step 5: Save the DataFrames to new CSV files
       matched_from_file1.to_csv(dir+file1, index=False)
       matched_from_file2.to_csv(dir+file2, index=False)
    except:
+      print("Could not match")
       return
       
 

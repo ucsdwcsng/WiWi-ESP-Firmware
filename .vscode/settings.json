@@ -5,7 +5,7 @@
     ],
     "idf.flashType": "UART",
     "cmake.sourceDirectory": "/Users/sureel/VS_Code/WiWi-ESP-Firmware/csi_send",
-    "idf.port": "/dev/cu.usbmodem141401",
+    "idf.port": "/dev/cu.usbmodem1201",
     "idf.espIdfPath": "/Users/sureel/esp/esp-idf",
     "idf.toolsPath": "/Users/sureel/.espressif"
 }

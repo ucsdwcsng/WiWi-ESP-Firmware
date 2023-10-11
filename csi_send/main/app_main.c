@@ -93,8 +93,8 @@ void esptx_setup()
     gpio_set_direction(GPIO_NUM_7, GPIO_MODE_OUTPUT);
     gpio_set_direction(GPIO_NUM_8, GPIO_MODE_OUTPUT);
 
-    esptx_set_independent_antenna(true, true); 
-    //  esptx_set_independent_antenna(false,false);
+    // esptx_set_independent_antenna(false, false); 
+     esptx_set_independent_antenna(true,true);
 }
 
 
@@ -107,11 +107,11 @@ void esptx_setup()
     if (!gpio_get_level(36) && !gpio_get_level(37))
     {
       esptx_setup();
-      // ets_vprintf("\n**********   This is TX ESP   ***********\n");
+      printf("\n**********   This is TX ESP   ***********\n");
     }
     else if (gpio_get_level(36) && !gpio_get_level(37))
     {
-      // ets_vprintf("\n**********   This is RX ESP   ***********\n");
+      printf("\n**********   This is RX ESP   ***********\n");
     }
 
     /**

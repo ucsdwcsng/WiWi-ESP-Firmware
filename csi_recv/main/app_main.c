@@ -179,19 +179,20 @@ void esptx_set_independent_antenna(bool tx_sma, bool rx_sma)
 
 void esptx_setup()
 {
-    // gpio_config_t io_conf2;
+//     gpio_config_t io_conf2;
 
-    // Set pins as output mode and without internal pull-up resistors
-    // io_conf2.mode = GPIO_MODE_OUTPUT;
-    // io_conf2.pin_bit_mask = ((1ULL << 1) | (1ULL << 7) | (1ULL << 8) |
-    //                         (1ULL << 2) | (1ULL << 4) | (1ULL << 5) |
-    //                         (1ULL << 6));
+//     // Set pins as output mode and without internal pull-up resistors
+//     io_conf2.mode = GPIO_MODE_OUTPUT;
+//     io_conf2.pin_bit_mask = ((1ULL << 1) | (1ULL << 7) | (1ULL << 8) |
+//                             (1ULL << 2) | (1ULL << 4) | (1ULL << 5) |
+//                             (1ULL << 6));
     
-    // io_conf2.pull_down_en = 0;
-    // io_conf2.pull_up_en = 0;
-    // io_conf2.intr_type = GPIO_INTR_DISABLE;
+//     io_conf2.pull_down_en = 0;
+//     io_conf2.pull_up_en = 0;
+//     io_conf2.intr_type = GPIO_INTR_DISABLE;
 
-    // gpio_config(&io_conf2);
+//     gpio_config(&io_conf2);
+
     gpio_set_direction(GPIO_NUM_1, GPIO_MODE_OUTPUT);
     gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);
     gpio_set_direction(GPIO_NUM_4, GPIO_MODE_OUTPUT);
@@ -202,7 +203,8 @@ void esptx_setup()
 
 
     // default, set TX and RX to their own chip antennas
-    esptx_set_independent_antenna(true, true);    //  esptx_set_independent_antenna(false,false);
+    // esptx_set_independent_antenna(false, false);    //  
+    esptx_set_independent_antenna(true,true);
 
     //  esptx_disconnect_txrx_wiwi();
 

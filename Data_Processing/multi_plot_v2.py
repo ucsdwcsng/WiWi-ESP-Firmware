@@ -6,18 +6,18 @@ import helper
 import matplotlib.gridspec as gridspec
 from prettytable import PrettyTable
 
-
+alt_plot = False
 data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
 
 # data_1 = "CSI_1"
 # data_2 = "CSI_2"
 
-data_1 = "S3_wireless_intclk_txrx_1_1"
-data_2 = "S3_wireless_intclk_txrx_1_1"
+data_1 = "S3_wired_sigclk_6mhz_1_2"
+data_2 = "S3_wired_sigclk_6mhz_2_2"
 
 helper.match_packets(data_1, data_2, data_dir)
 
-packet = 150  # This is the chosen packet for analysis
+packet = 1  # This is the chosen packet for analysis
 
 
 # Read tables from CSV files
@@ -34,6 +34,9 @@ CMatrix2 = helper.process_csi(T2)
 SubChannel = np.arange(-64, 64)
 CSub1 = np.column_stack((CMatrix1[:, 128:192], CMatrix1[:, 64:128]))
 CSub2 = np.column_stack((CMatrix2[:, 128:192], CMatrix2[:, 64:128]))
+
+# CSub1 = np.column_stack((CMatrix1[:, 134:191], CMatrix1[:, 66:123]))
+# CSub2 = np.column_stack((CMatrix2[:, 134:191], CMatrix2[:, 66:123]))
 
 CSubShiftHigh1 = CSub1.copy()
 CSubShiftHigh2 = CSub2.copy()
@@ -105,6 +108,11 @@ if data_1 == data_2:
     ax2.set_xlabel("subcarrier in sub channel order")
     ax2.set_ylabel("Phase #1 (deg)")
     # ax2.set_ylim([-200, 200])
+elif alt_plot == True:
+    ax2.plot(np.unwrap(np.mean(
+        PhaseSubShiftHighSelect1[:, 8:120] - PhaseSubShiftHighSelect2[:, 8:120], axis=1)))
+    # ax2.plot(SubChannelSelect, (PhaseSubShiftHighSelect2.T - PhaseSubShiftHighSelect1.T))
+
 else:
     ax2.plot(PMatrix2[packet], linewidth=2, color='blue')
     ax2.set_ylabel("Phase #2 (deg)")
