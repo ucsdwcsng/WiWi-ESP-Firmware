@@ -25,7 +25,9 @@
 #include "esp_system.h"
 
 #define CONFIG_LESS_INTERFERENCE_CHANNEL    11
-#define CONFIG_SEND_FREQUENCY               50
+#define CONFIG_SEND_FREQUENCY               1000  // Hz
+#define CONFIG_NUM_PKTS_BURST               10
+#define CONFIG_INTERBURST_INTERVAL          1  // sec
 
 static const uint8_t CONFIG_CSI_SEND_MAC[] = {0x1a, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const char *TAG = "csi_send";
@@ -98,66 +100,68 @@ void esptx_setup()
 }
 
 
-    void app_main()
-    {
+void app_main(){
+  gpio_set_direction(GPIO_NUM_36, GPIO_MODE_INPUT);
+  gpio_set_direction(GPIO_NUM_37, GPIO_MODE_INPUT);
 
-    gpio_set_direction(GPIO_NUM_36, GPIO_MODE_INPUT);
-    gpio_set_direction(GPIO_NUM_37, GPIO_MODE_INPUT);
+  if (!gpio_get_level(36) && !gpio_get_level(37))
+  {
+    esptx_setup();
+    printf("\n**********   This is TX ESP   ***********\n");
+  }
+  else if (gpio_get_level(36) && !gpio_get_level(37))
+  {
+    printf("\n**********   This is RX ESP   ***********\n");
+  }
 
-    if (!gpio_get_level(36) && !gpio_get_level(37))
-    {
-      esptx_setup();
-      printf("\n**********   This is TX ESP   ***********\n");
+  /**
+   * @breif Initialize NVS
+   */
+  esp_err_t ret = nvs_flash_init();
+  if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+  {
+    ESP_ERROR_CHECK(nvs_flash_erase());
+    ret = nvs_flash_init();
     }
-    else if (gpio_get_level(36) && !gpio_get_level(37))
-    {
-      printf("\n**********   This is RX ESP   ***********\n");
-    }
+    ESP_ERROR_CHECK(ret);
 
     /**
-     * @breif Initialize NVS
+     * @breif Initialize Wi-Fi
      */
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      ret = nvs_flash_init();
-      }
-      ESP_ERROR_CHECK(ret);
+    wifi_init();
 
-      /**
-       * @breif Initialize Wi-Fi
-       */
-      wifi_init();
+    /**
+     * @breif Initialize ESP-NOW
+     *        ESP-NOW protocol see: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html
+     */
+    ESP_ERROR_CHECK(esp_now_init());
+    ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t *)"pmk1234567890123"));
 
-      /**
-       * @breif Initialize ESP-NOW
-       *        ESP-NOW protocol see: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html
-       */
-      ESP_ERROR_CHECK(esp_now_init());
-      ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t *)"pmk1234567890123"));
+    esp_now_peer_info_t peer = {
+        .channel = CONFIG_LESS_INTERFERENCE_CHANNEL,
+        .ifidx = WIFI_IF_STA,
+        .encrypt = false,
+        .peer_addr = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
+    };
+    ESP_ERROR_CHECK(esp_now_add_peer(&peer));
 
-      esp_now_peer_info_t peer = {
-          .channel = CONFIG_LESS_INTERFERENCE_CHANNEL,
-          .ifidx = WIFI_IF_STA,
-          .encrypt = false,
-          .peer_addr = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
-      };
-      ESP_ERROR_CHECK(esp_now_add_peer(&peer));
+    ESP_LOGI(TAG, "================ CSI SEND ================");
+    ESP_LOGI(TAG, "wifi_channel: %d, send_frequency: %d, mac: " MACSTR,
+             CONFIG_LESS_INTERFERENCE_CHANNEL, CONFIG_SEND_FREQUENCY, MAC2STR(CONFIG_CSI_SEND_MAC));
 
-      ESP_LOGI(TAG, "================ CSI SEND ================");
-      ESP_LOGI(TAG, "wifi_channel: %d, send_frequency: %d, mac: " MACSTR,
-               CONFIG_LESS_INTERFERENCE_CHANNEL, CONFIG_SEND_FREQUENCY, MAC2STR(CONFIG_CSI_SEND_MAC));
+    u_int32_t pktid = 0;
+    while (true) {
+      for (uint32_t count = 0; count < CONFIG_NUM_PKTS_BURST; ++count) {
+        esp_err_t ret = esp_now_send(peer.peer_addr, &pktid, sizeof(uint32_t));
 
-      for (uint32_t count = 0;; ++count)
-      {
-        esp_err_t ret = esp_now_send(peer.peer_addr, &count, sizeof(uint32_t));
-
-        if (ret != ESP_OK)
-        {
+        if (ret != ESP_OK) {
           ESP_LOGW(TAG, "<%s> ESP-NOW send error", esp_err_to_name(ret));
         }
-
+        pktid += 1;
         usleep(1000 * 1000 / CONFIG_SEND_FREQUENCY);
+        ESP_LOGI(TAG, "packet id: %lu", pktid);
+
+      }
+      usleep(1000000 * CONFIG_INTERBURST_INTERVAL);
     }
 }

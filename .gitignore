@@ -1,0 +1,5 @@
+**/csi_send/build/*
+**/csi_recv/build/*
+.idea/
+build/
+**/*.pyc

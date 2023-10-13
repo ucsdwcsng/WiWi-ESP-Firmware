@@ -231,9 +231,9 @@ if __name__ == '__main__':
     ESP_NUM = 1
     Visualize = False
 
-    path = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
+    path = "/home/aarun/Research/data/time_sync/burst_testing/"
 
-    serial_port = "/dev/cu.usbmodem14101"
+    serial_port = "/dev/ttyACM0"
     file_name = "S3_wired_FTM.csv"
     
     if ESP_NUM == 2:

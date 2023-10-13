@@ -23,7 +23,6 @@
 #include "driver/gpio.h"
 
 #define CONFIG_LESS_INTERFERENCE_CHANNEL    11
-#define CONFIG_SEND_FREQUENCY               100
 
 static const uint8_t CONFIG_CSI_SEND_MAC[] = {0x1a, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const char *TAG = "csi_recv";
@@ -77,25 +76,25 @@ static void wifi_csi_rx_cb(void *ctx, wifi_csi_info_t *info)
     static int s_count = 0;
     const wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
 
-    if (!s_count) {
-        ESP_LOGI(TAG, "================ CSI RECV ================");
-        ets_printf("type,id,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,ant,sig_len,rx_state,len,first_word,data,packet,id\n");
-    }
+//    if (!s_count) {
+//        ESP_LOGI(TAG, "================ CSI RECV ================");
+//        ets_printf("type,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,sig_len,rx_state,len,first_word,data\n");
+//    }
 
-    ets_printf("CSI_DATA,%d," MACSTR ",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
-            s_count++, MAC2STR(info->mac), rx_ctrl->rssi, rx_ctrl->rate, rx_ctrl->sig_mode,
+    ets_printf("CSI_DATA," MACSTR ",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+            MAC2STR(info->mac), rx_ctrl->rssi, rx_ctrl->rate, rx_ctrl->sig_mode,
             rx_ctrl->mcs, rx_ctrl->cwb, rx_ctrl->smoothing, rx_ctrl->not_sounding,
             rx_ctrl->aggregation, rx_ctrl->stbc, rx_ctrl->fec_coding, rx_ctrl->sgi,
             rx_ctrl->noise_floor, rx_ctrl->ampdu_cnt, rx_ctrl->channel, rx_ctrl->secondary_channel,
-            rx_ctrl->timestamp, rx_ctrl->ant, rx_ctrl->sig_len, rx_ctrl->rx_state);
+            rx_ctrl->timestamp, rx_ctrl->sig_len, rx_ctrl->rx_state);
 
-    ets_printf(",%d,%d,\"[%d", info->len, info->first_word_invalid, info->buf[0]);
+    ets_printf(",%d,%d,[%d", info->len, info->first_word_invalid, info->buf[0]);
 
     for (int i = 1; i < info->len; i++) {
-        ets_printf(",%d", info->buf[i]);
+        ets_printf(";%d", info->buf[i]);
     }
 
-    ets_printf("]\"");
+    ets_printf("]\n");
 }
 
 static void wifi_sniffer_packet_handler(void *buff, wifi_promiscuous_pkt_type_t type)
@@ -107,9 +106,7 @@ static void wifi_sniffer_packet_handler(void *buff, wifi_promiscuous_pkt_type_t 
     // Compare the source MAC address
     if (memcmp(hdr->addr2, CONFIG_CSI_SEND_MAC, 6) == 0)
     {
-        ets_printf(",%d", pkt->payload[39]);
-        ets_printf(",%d", pkt->payload[40]);
-        printf("\n");
+        ets_printf("PKT_ID, %d, %d \n", pkt->payload[39], pkt->payload[40]);
     }
 }
 

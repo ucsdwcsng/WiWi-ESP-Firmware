@@ -1,30 +1,31 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import CubicSpline
 import helper
 import matplotlib.gridspec as gridspec
-from prettytable import PrettyTable
 
 alt_plot = False
-data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
+# data_dir = "/Users/sureel/VS_Code/wiwi-time-sync/Data/"
+data_dir = "/home/aarun/Research/data/time_sync/cfo_data/sampling_50_hz/"
 
 # data_1 = "CSI_1"
 # data_2 = "CSI_2"
 
 phase_1, phase_2, Time = [], [], []
+PacketId = []
 
 packet = 1  # This is the chosen packet for analysis
 
-num_files = 10
-increments = 1
+# freq_shifts = [80, 90, 100, 150, 200]
+freq_shifts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200]
+packet_rate = 50
 
-for i in range(0, num_files*increments, increments):
+for fs in freq_shifts:
 
-    data_1 = "S3_wired_sigclk_" + str(i) + "mhz_1_3"
-    data_2 = "S3_wired_sigclk_" + str(i) + "mhz_2_3"
+    data_1 = "S3_wired_sigclk_" + str(fs) + "mhz_1_1"
+    data_2 = "S3_wired_sigclk_" + str(fs) + "mhz_2_1"
 
-    helper.match_packets(data_1, data_2, data_dir)
+    # helper.match_packets(data_1, data_2, data_dir)
 
     # Read tables from CSV files
     T1 = pd.read_csv(data_dir+data_1+".csv")
@@ -34,13 +35,16 @@ for i in range(0, num_files*increments, increments):
     lengCM = T1.iloc[0, 22]  # Assuming indexing starts from 0
     RSSI = T1.iloc[packet, 3]
 
+    cur_packet_id = (T1['idx'].values << 8) + T1['packet'].values
+    PacketId.append(cur_packet_id - cur_packet_id[0])
+
     try:
         Timestamp = np.array(T1.iloc[:, 27])
         Timestamp = Timestamp-Timestamp[0]
         Time.append(Timestamp)
     # print(Time)
     except:
-        print("No Timestamp")
+        # print(f"No Timestamp for {data_1}")
         Time.append(np.arange(0, NumPCT))
 
     CMatrix1 = helper.process_csi(T1)
@@ -79,31 +83,29 @@ for i in range(0, num_files*increments, increments):
     phase_1.append(PhaseSubShiftHighSelect1)
     phase_2.append(PhaseSubShiftHighSelect2)
 
+    # compute slopes when packet id's are consecutive
+    consecutive_pkts = np.where(np.diff(cur_packet_id) == 1)[0]
+    ph1 = np.mean(np.angle(np.exp(1j*(PhaseSubShiftHighSelect2[consecutive_pkts] -
+                  PhaseSubShiftHighSelect1[consecutive_pkts]))), axis=1)
+    ph2 = np.mean(np.angle(np.exp(1j*(PhaseSubShiftHighSelect2[consecutive_pkts+1] -
+                  PhaseSubShiftHighSelect1[consecutive_pkts+1]))), axis=1)
+    sl = np.mean(np.angle(np.exp(1j*(ph2 - ph1)))*packet_rate)
+    print(fs, sl/2/np.pi/60*1e3, 2*np.pi*fs*1e-3*60, len(consecutive_pkts))
+    # import pdb
+    # pdb.set_trace()
+
 # phase_1 = np.array(phase_1)
 # phase_2 = np.array(phase_2)
 
+#%%
 # Create a list of 10 colors to cycle through
+Time = PacketId
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', '#FFA500', '#800080', '#008000']
-
-
-# ... [your code before plotting remains unchanged]
-
 fig = plt.figure(figsize=(8, 8))
-gs_main = gridspec.GridSpec(2, 1, height_ratios=[2, 1])
-
-ax1 = plt.Subplot(fig, gs_main[0])
-ax2 = plt.Subplot(fig, gs_main[1])
-# print(len(stan))
+ax1, ax2 = fig.subplots(2,1)
 Phase_avg, ffit, yfit, slope, freq = [], [], [], [], []
-
-freq = np.arange(0, num_files*increments, increments)
-# print(freq)
-# plt.hist(stan, bins=20)
-for i in range(len(phase_1)):
-    # for i in range(3):
-
-    # Phase_avg = []
-    # Time.append(np.arange(0, phase_1[i].shape[0]))
+freq = freq_shifts
+for i, fs in enumerate(freq_shifts):
 
     Phase_avg.append(np.unwrap(np.mean(
         phase_1[i] - phase_2[i], axis=1)))
@@ -121,18 +123,14 @@ for i in range(len(phase_1)):
     # plt.plot(Time[i], Phase_avg[i], 'k.', Time[i], yfit[i], 'r-')
     Phase_avg[i] = Phase_avg[i] - Phase_avg[i][0]
     ax1.plot(Time[i], Phase_avg[i], '.', color=colors[i % len(colors)],
-             label=f'Slope: {ffit[i][0]:.5f}, ' + f'\u0394F {increments*i}mHz',)
-    ax1.plot(Time[i], yfit[i], color='black',
-             linestyle='-',   markersize=10)
-
-    ax2.plot(increments*i, ffit[i][0], '*',
+             label=f'Slope: {ffit[i][0]:.5f}, ' + f'\u0394F {fs}mHz',)
+    # ax1.plot(Time[i], yfit[i], color='black',
+    #          linestyle='-',   markersize=10)
+    ax1.grid("all")
+    ax2.plot(fs, ffit[i][0], '*',
              markersize=10, color=colors[i % len(colors)])
+    plt.grid("all")
 
-# print(len(slope))
-ffit2 = np.polyfit(freq, slope, 1)
-yfit2 = np.polyval(ffit2, freq)
-
-ax2.plot(freq, yfit2, label=f'Slope: {ffit2[0]: .5f}')
 
 ax1.set_xlabel('Time [s]')
 ax1.set_ylabel('mean ' + r'$\phi_2 - \phi_1$ [rad]')
@@ -143,6 +141,13 @@ ax2.set_xlabel("\u0394Frequency (mHz)")
 ax2.set_ylabel("Slope")
 ax2.set_title("Slope vs \u0394Frequency (mHz)")
 ax2.legend()
+
+#%%
+# print(len(slope))
+ffit2 = np.polyfit(freq[:10], slope[:10], 1)
+yfit2 = np.polyval(ffit2, freq)
+
+ax2.plot(freq, yfit2, label=f'Slope: {ffit2[0]: .5f}')
 
 # fig.add_subplot(ax6)
 ax1.grid(True, which='both', linestyle='--', linewidth=0.5)
