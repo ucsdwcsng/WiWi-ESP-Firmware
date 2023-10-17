@@ -24,9 +24,10 @@
 #include "nvs_flash.h" 
 #include "esp_system.h"
 
+#define TURN_ON                             true
 #define CONFIG_LESS_INTERFERENCE_CHANNEL    11
-#define CONFIG_SEND_FREQUENCY               1000  // Hz
-#define CONFIG_NUM_PKTS_BURST               10
+#define CONFIG_SEND_FREQUENCY               1000  // Hz // TODO: needs testing
+#define CONFIG_NUM_PKTS_BURST               5
 #define CONFIG_INTERBURST_INTERVAL          1  // sec
 
 static const uint8_t CONFIG_CSI_SEND_MAC[] = {0x1a, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -150,7 +151,7 @@ void app_main(){
              CONFIG_LESS_INTERFERENCE_CHANNEL, CONFIG_SEND_FREQUENCY, MAC2STR(CONFIG_CSI_SEND_MAC));
 
     u_int32_t pktid = 0;
-    while (true) {
+    while (TURN_ON) {
       for (uint32_t count = 0; count < CONFIG_NUM_PKTS_BURST; ++count) {
         esp_err_t ret = esp_now_send(peer.peer_addr, &pktid, sizeof(uint32_t));
 

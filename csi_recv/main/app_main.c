@@ -26,6 +26,10 @@
 
 static const uint8_t CONFIG_CSI_SEND_MAC[] = {0x1a, 0x00, 0x00, 0x00, 0x00, 0x00};
 static const char *TAG = "csi_recv";
+char csi_str[2000];
+char pkt_str[100];
+int seen_csi = 0;
+int seen_pkt = 0;
 
 // byte led_pin = 0;
 typedef struct
@@ -81,20 +85,29 @@ static void wifi_csi_rx_cb(void *ctx, wifi_csi_info_t *info)
 //        ets_printf("type,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,sig_len,rx_state,len,first_word,data\n");
 //    }
 
-    ets_printf("CSI_DATA," MACSTR ",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+    sprintf(csi_str, "CSI_DATA," MACSTR ",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
             MAC2STR(info->mac), rx_ctrl->rssi, rx_ctrl->rate, rx_ctrl->sig_mode,
             rx_ctrl->mcs, rx_ctrl->cwb, rx_ctrl->smoothing, rx_ctrl->not_sounding,
             rx_ctrl->aggregation, rx_ctrl->stbc, rx_ctrl->fec_coding, rx_ctrl->sgi,
             rx_ctrl->noise_floor, rx_ctrl->ampdu_cnt, rx_ctrl->channel, rx_ctrl->secondary_channel,
             rx_ctrl->timestamp, rx_ctrl->sig_len, rx_ctrl->rx_state);
 
-    ets_printf(",%d,%d,[%d", info->len, info->first_word_invalid, info->buf[0]);
+    sprintf(csi_str + strlen(csi_str), ",%d,%d,[%d", info->len, info->first_word_invalid, info->buf[0]);
 
     for (int i = 1; i < info->len; i++) {
-        ets_printf(";%d", info->buf[i]);
+        sprintf(csi_str + strlen(csi_str), ";%d", info->buf[i]);
     }
+    sprintf(csi_str + strlen(csi_str), "]");
 
-    ets_printf("]\n");
+    ets_printf("%s \n", csi_str);
+
+//  if (seen_pkt == 1) {
+//        ets_printf("csi-callback, %s, %s \n", csi_str, pkt_str);
+//        seen_pkt = 0;
+//        seen_csi = 0;
+//      } else {
+//        seen_csi = 1;
+//    }
 }
 
 static void wifi_sniffer_packet_handler(void *buff, wifi_promiscuous_pkt_type_t type)
@@ -106,8 +119,17 @@ static void wifi_sniffer_packet_handler(void *buff, wifi_promiscuous_pkt_type_t 
     // Compare the source MAC address
     if (memcmp(hdr->addr2, CONFIG_CSI_SEND_MAC, 6) == 0)
     {
-        ets_printf("PKT_ID, %d, %d \n", pkt->payload[39], pkt->payload[40]);
+        sprintf(pkt_str, "PKT_ID, %d, %d", pkt->payload[39], pkt->payload[40]);
     }
+    ets_printf("%s \n", pkt_str);
+
+//     if (seen_csi == 1){
+//      ets_printf("Sniffer, %s, %s \n", csi_str, pkt_str);
+//      seen_pkt = 0;
+//      seen_csi = 0;
+//    } else {
+//      seen_pkt = 1;
+//    }
 }
 
 static void wifi_csi_init()
